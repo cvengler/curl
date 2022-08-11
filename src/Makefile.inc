@@ -125,6 +125,7 @@ CURL_HFILES = \
   tool_paramhlp.h \
   tool_parsecfg.h \
   tool_progress.h \
+  tool_sbox.h \
   tool_sdecls.h \
   tool_setopt.h \
   tool_setup.h \
