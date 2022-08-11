@@ -161,6 +161,7 @@ curl_unix_sockets_msg="no      (--enable-unix-sockets)"
  curl_manual_msg="no      (--enable-manual)"
 curl_libcurl_msg="enabled (--disable-libcurl-option)"
 curl_verbose_msg="enabled (--disable-verbose)"
+curl_sandbox_msg="no      (--enable-sandbox)"
    curl_sspi_msg="no      (--enable-sspi)"
    curl_ldap_msg="no      (--enable-ldap / --with-ldap-lib / --with-lber-lib)"
   curl_ldaps_msg="no      (--enable-ldaps)"
@@ -3513,7 +3514,9 @@ AC_CHECK_FUNCS([fnmatch \
   setmode \
   setrlimit \
   utime \
-  utimes
+  utimes \
+  pledge \
+  unveil
 ],[
 ],[
   func="$ac_func"
@@ -3744,6 +3747,26 @@ AS_HELP_STRING([--disable-verbose],[Disable verbose strings]),
        ;;
   esac ],
        AC_MSG_RESULT(yes)
+)
+
+dnl ************************************************************
+dnl enable sandbox
+dnl
+AC_MSG_CHECKING([whether to enable sandboxing])
+AC_ARG_ENABLE(sandbox,
+AS_HELP_STRING([--enable-sandbox],[Enable sandboxing])
+AS_HELP_STRING([--disable-sandbox],[Disable sandboxing]),
+[ case "$enableval" in
+  yes)
+       AC_MSG_RESULT(yes)
+       AC_DEFINE(CURL_ENABLE_SANDBOX, 1, [to enable sandboxing])
+       curl_sandbox_msg="yes"
+       ;;
+  *)
+       AC_MSG_RESULT(no)
+       ;;
+  esac ],
+       AC_MSG_RESULT(no)
 )
 
 dnl ************************************************************
@@ -4524,6 +4547,7 @@ AC_MSG_NOTICE([Configured to build curl/libcurl:
   Built-in manual:  ${curl_manual_msg}
   --libcurl option: ${curl_libcurl_msg}
   Verbose errors:   ${curl_verbose_msg}
+  Sandbox:          ${curl_sandbox_msg}
   Code coverage:    ${curl_coverage_msg}
   SSPI:             ${curl_sspi_msg}
   ca cert bundle:   ${ca}${ca_warning}
