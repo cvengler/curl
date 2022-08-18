@@ -84,6 +84,9 @@
 #include "tool_hugehelp.h"
 #include "tool_progress.h"
 #include "dynbuf.h"
+#if defined(CURL_ENABLE_SANDBOX) || defined(CURLDEBUG)
+#  include "tool_sbox.h"
+#endif
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -2671,6 +2674,13 @@ CURLcode operate(struct GlobalConfig *global, int argc, argv_item_t argv[])
         result = CURLE_FAILED_INIT;
     }
     else {
+      /* Do the sandboxing as soon as possible! */
+#if defined(CURL_ENABLE_SANDBOX) || defined(CURLDEBUG)
+      {
+        sandbox_t promises = sandbox_promises(global);
+        printf("Promises: %u\n", promises);
+      }
+#endif
 #ifndef CURL_DISABLE_LIBCURL_OPTION
       if(global->libcurl) {
         /* Initialise the libcurl source output */
