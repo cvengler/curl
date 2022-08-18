@@ -29,9 +29,40 @@
 
 #include "memdebug.h" /* keep this as LAST include */
 
+/* Inspect the global config and generate the required promises bitmask */
+static sandbox_t promises_global(struct GlobalConfig *config)
+{
+  sandbox_t promises = 0;
+  (void)config;
+
+  return promises;
+}
+
+/* Inspect a single struct OperationConfig and generate the required promises
+   bitmask */
+static sandbox_t promises_operation(struct OperationConfig *config)
+{
+  sandbox_t promises = 0;
+  (void)config;
+
+  return promises;
+}
+
 sandbox_t sandbox_promises(struct GlobalConfig *global)
 {
-  return 0;
+  struct OperationConfig *oper;
+  sandbox_t promises = 0;
+
+  /* These three promises are essentially always required for curl */
+  /* TODO: Drop INET and DNS for file:// transfers and/or transfers not
+     involving any DNS operations */
+  promises |= (SANDBOX_STDIO | SANDBOX_INET | SANDBOX_DNS);
+
+  promises |= promises_global(global);
+  for(oper = global->first; oper != NULL; oper = oper->next)
+    promises |= promises_operation(oper);
+
+  return promises;
 }
 
 #endif
