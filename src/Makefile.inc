@@ -84,6 +84,7 @@ CURL_CFILES = \
   tool_paramhlp.c \
   tool_parsecfg.c \
   tool_progress.c \
+  tool_sbox.c \
   tool_strdup.c \
   tool_setopt.c \
   tool_sleep.c \

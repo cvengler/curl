@@ -28,6 +28,8 @@
 
 #if defined(CURL_ENABLE_SANDBOX) || defined(CURLDEBUG)
 
+#include "tool_cfgable.h"
+
 /*
  * This is the sandbox interface for the curl tool, which tries to provide a
  * generic wrapper around operating-system-specific sandboxing mechanisms, such
@@ -57,6 +59,8 @@ struct Sandbox {
   int (*pledge)(sandbox_t);
   int (*unveil)(const char *, const char *);
 };
+
+sandbox_t sandbox_promises(struct GlobalConfig *global);
 
 #endif
 
